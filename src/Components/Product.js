@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Product({ name, price, inStock, currency, image }) {
+function Product({ name, price, inStock, currency, image, delivery, rating }) {
   const [quantity, setQuantity] = useState(0);
 
   const increase = () => {
@@ -21,6 +21,8 @@ function Product({ name, price, inStock, currency, image }) {
         {currency}
       </h4>
       <h4>In Stock : {inStock ? 'Yes' : 'No'}</h4>
+      <h4>Deliverable : {delivery ? 'Yes' : 'No'}</h4>
+      <h4>Rating : {rating}</h4>
       <p> Qunatity : {quantity}</p>
       <button type="button" disabled={!inStock} onClick={increase}>
         increase
