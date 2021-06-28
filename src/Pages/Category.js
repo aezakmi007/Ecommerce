@@ -4,73 +4,77 @@
 /* eslint-disable no-useless-return */
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import prod from '../data/products';
 import Product from '../Components/Product';
+import useCart from '../context/CartContext';
 
 function Category() {
   const { id } = useParams();
+  const { total, items, addTotal, addItems, noOfItems, changeNoOfItems } =
+    useCart();
+
+  console.log(`total ${total}`);
+  console.log(items);
+  console.log(addTotal);
+  console.log(addItems);
+  console.log(changeNoOfItems);
+
   const catId = id;
-  console.log(catId);
-  const [array] = useState(prod.filter(item => item.categoryId === catId));
+  // console.log(catId);
+
+  const [array] = useState(prod.filter(it => it.categoryId === catId));
   const [filterText, setFilterText] = useState('');
 
-  // const [checked, isChecked] = useState('');
   const checked = ['All'];
 
   const newArr = [...array];
 
   let filteredItems = [];
 
+  const checkedFunction = text => {
+    if (checked.length === 0) {
+      checked.push(text);
+    } else {
+      checked.pop();
+      checked.push(text);
+    }
+  };
+
   if (filterText) {
     if (filterText === 'price') {
       const val = newArr.reduce((a, b) => (a.price >= b.price ? a : b)).price;
       console.log(val);
-      filteredItems = newArr.filter(item => item.price === val);
-      if (checked.length === 0) {
-        checked.push(filterText);
-      } else {
-        checked.pop();
-        checked.push(filterText);
-      }
+      filteredItems = newArr.filter(it => it.price === val);
+      checkedFunction(filterText);
     } else if (filterText === 'delivery') {
-      filteredItems = newArr.filter(item => item.delivery === true);
-      if (checked.length === 0) {
-        checked.push(filterText);
-      } else {
-        checked.pop();
-        checked.push(filterText);
-      }
+      filteredItems = newArr.filter(it => it.delivery === true);
+      checkedFunction(filterText);
     } else if (filterText === 'bestSelling') {
       const value = newArr.reduce((a, b) =>
         a.bestSelling > b.bestSelling ? a : b
       ).bestSelling;
-      filteredItems = newArr.filter(item => item.bestSelling === value);
-      if (checked.length === 0) {
-        checked.push(filterText);
-      } else {
-        checked.pop();
-        checked.push(filterText);
-        console.log(checked);
-      }
+      filteredItems = newArr.filter(it => it.bestSelling === value);
+      checkedFunction(filterText);
     } else {
       filteredItems = newArr;
-      if (checked.length === 0) {
-        checked.push(filterText);
-        console.log(filterText);
-      } else {
-        console.log(checked.pop());
-        checked.push(filterText);
-        console.log(checked);
-      }
+      checkedFunction(filterText);
     }
   }
 
-  console.log(filteredItems);
+  // console.log(filteredItems);
   const displayArr = filterText ? filteredItems : array;
+
+  // const onAddTotal = value => {
+  //   console.log(displayArr.find(x => x.id === value));
+  // };
 
   return (
     <div>
+      <h1>
+        {noOfItems} {total}$
+      </h1>
+      <Link to="/checkout">CheckOut</Link>
       <h3>Filters</h3>
       <label htmlFor="p">
         All
@@ -112,16 +116,18 @@ function Category() {
           onChange={e => setFilterText(e.target.value)}
         />
       </label>
-      {displayArr.map(item => (
+      {displayArr.map(it => (
         <Product
-          key={item.id}
-          name={item.name}
-          inStock={item.inStock}
-          price={item.price}
-          image={item.thumbnail}
-          currency={item.currency}
-          delivery={item.delivery}
-          rating={item.bestSelling}
+          key={it.id}
+          name={it.name}
+          inStock={it.inStock}
+          price={it.price}
+          image={it.thumbnail}
+          currency={it.currency}
+          delivery={it.delivery}
+          rating={it.bestSelling}
+          id={it.id}
+          // onAdd={onAddTotal}
         />
       ))}
     </div>
