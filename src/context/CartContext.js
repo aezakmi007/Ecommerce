@@ -12,14 +12,36 @@ export const CartProvider = ({ children }) => {
   };
 
   const addItems = prod => {
-    setItems(prev => [...prev, prod]);
+    setItems(prev => [...prev, prod[0]]);
+  };
+  const decreaseTotal = value => {
+    setTotal(prev => prev - value);
+  };
+  const reduceCart = value => {
+    const arr = [...items];
+    const index = arr.indexOf(value);
+    arr.splice(index, 1);
+    setItems(arr);
   };
   const changeNoOfItems = () => {
     setNoOfItems(prev => prev + 1);
   };
+  const decreaseNoOfItems = () => {
+    setNoOfItems(prev => prev - 1);
+  };
   return (
     <CartContext.Provider
-      value={{ total, items, noOfItems, changeNoOfItems, addItems, addTotal }}
+      value={{
+        total,
+        items,
+        noOfItems,
+        changeNoOfItems,
+        addItems,
+        addTotal,
+        decreaseTotal,
+        reduceCart,
+        decreaseNoOfItems,
+      }}
     >
       {children}
     </CartContext.Provider>

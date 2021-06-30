@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import React from 'react';
 import useCart from '../context/CartContext';
 import prod from '../data/products';
@@ -23,11 +24,30 @@ function Product({
   console.log(addItems);
   console.log(noOfItems);
 
+  const checkInclude = () => {
+    if (items.length === 0) {
+      return false;
+    }
+
+    for (let i = 0; i < items.length; i++) {
+      const value = items[i].id;
+      if (value === id) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const onAdd = () => {
-    if (!items.includes(id)) {
+    const condition = checkInclude();
+    console.log(condition);
+    if (!condition) {
       addTotal(prod.find(x => x.id === id).price);
       changeNoOfItems();
-      addItems(prod.find(x => x.id === id).id);
+      const productId = prod.find(x => x.id === id).id;
+      const productData = prod.filter(x => x.id === productId);
+      console.log(productData);
+      addItems(productData);
     } else {
       alert('Already Added to the cart');
     }
