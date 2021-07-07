@@ -1,3 +1,5 @@
+/* eslint-disable no-unneeded-ternary */
+/* eslint-disable dot-notation */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-param-reassign */
@@ -15,20 +17,24 @@ function CheckOutProducts({ name, image, id, price }) {
     reduceCart,
     decreaseNoOfItems,
     changeNoOfItems,
+    items,
   } = useCart();
-
+  const quantityDataFromLocalStorage = () => {
+    let obj = JSON.parse(localStorage.getItem('quantityData'));
+    console.log(obj);
+    obj = obj.find(x => x.i === id);
+    if (obj) return obj.quant;
+    return 1;
+  };
   const [quantity, setQuantity] = useState(
-    localStorage.getItem('quantityData')
-      ? JSON.parse(localStorage.getItem('quantityData')).length !== 0
-        ? JSON.parse(localStorage.getItem('quantityData')).find(x => x.i === id)
-            .quant
-        : 1
-      : 1
+    localStorage.getItem('quantityData') ? quantityDataFromLocalStorage : 1
   );
 
   const removeQuantity = y => {
     let data = JSON.parse(localStorage.getItem('quantityData'));
+    alert(`Deleted Item is ${y}`);
     data = data.filter(x => x.i !== y);
+    console.log(data);
     if (data.length === 0) {
       localStorage.removeItem('quantityData');
     } else {
@@ -53,11 +59,11 @@ function CheckOutProducts({ name, image, id, price }) {
 
   const onRemove = val => {
     if (quantity === 0) {
-      reduceCart(prod.find(x => x.id === String(val)));
+      reduceCart(items.find(x => x.id === String(val)));
       decreaseNoOfItems(quantity);
       removeQuantity(id);
     } else {
-      reduceCart(prod.find(x => x.id === val));
+      reduceCart(items.find(x => x.id === String(val)));
       decreaseTotal(prod.find(x => x.id === val).price * quantity);
       decreaseNoOfItems(quantity);
       removeQuantity(id);
@@ -65,7 +71,7 @@ function CheckOutProducts({ name, image, id, price }) {
   };
   // useEffect(() => {
   //   const data = [];
-  //   localStorage.setItem('quantityData', JSON.stringify(data));
+  //   localStorage.setItem('quantityData', JSON.stringify(d
   // });
 
   useEffect(() => {
@@ -80,6 +86,7 @@ function CheckOutProducts({ name, image, id, price }) {
 
         if (val) {
           getData.forEach(x => {
+            console.log(x);
             if (x.i === id) {
               x.quant = quantity;
               localStorage.setItem('quantityData', JSON.stringify(getData));
@@ -89,17 +96,17 @@ function CheckOutProducts({ name, image, id, price }) {
           getData = getData.concat(arr);
           localStorage.setItem('quantityData', JSON.stringify(getData));
         }
-      } else {
-        let getData = JSON.parse(localStorage.getItem('quantityData'));
-        getData = getData.concat(arr);
-        localStorage.setItem('quantityData', JSON.stringify(getData));
       }
+      // } else {
+      //   let getData = JSON.parse(localStorage.getItem('quantityData'));
+      //   getData = getData.concat(arr);
+      //   localStorage.setItem('quantityData', JSON.stringify(getData));
     } else {
       const a = [];
       a.push(arr);
       localStorage.setItem('quantityData', JSON.stringify(a));
     }
-  }, [quantity]);
+  });
 
   return (
     <div>
