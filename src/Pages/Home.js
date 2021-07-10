@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import categories from '../data/categories';
 import Categ from '../Components/Categ';
 import useCart from '../context/CartContext';
+import '../Styles/CategoryPage.css';
 
 function Home() {
   const [data] = useState(categories);
@@ -12,13 +13,15 @@ function Home() {
   console.log(addTotal);
   console.log(addItems);
   return (
-    <div>
+    <div className="cards">
       <h1>
         {noOfItems} {total}$
       </h1>
       <Link to="/checkout">CheckOut</Link>
       {data.map(it => (
-        <Categ key={it.id} name={it.name} desc={it.description} id={it.id} />
+        <div className="main-div">
+          <Categ key={it.id} name={it.name} desc={it.description} id={it.id} />
+        </div>
       ))}
     </div>
   );

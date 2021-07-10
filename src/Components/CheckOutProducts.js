@@ -32,7 +32,7 @@ function CheckOutProducts({ name, image, id, price }) {
 
   const removeQuantity = y => {
     let data = JSON.parse(localStorage.getItem('quantityData'));
-    alert(`Deleted Item is ${y}`);
+    // alert(`Deleted Item is ${y}`);
     data = data.filter(x => x.i !== y);
     console.log(data);
     if (data.length === 0) {
